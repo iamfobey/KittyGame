@@ -35,12 +35,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Supported Actions")
 	UInputAction* JumpAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input|Supported Actions")
+	UInputAction* PushAction;
 	// ------------------------------------------------------------
 
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
-	void Move(const FInputActionValue& Value) const;
-	void Look(const FInputActionValue& Value) const;
-	void DoJump(const FInputActionValue& Value) const;
+	void TryMove(const FInputActionValue& Value);
+	void TryLook(const FInputActionValue& Value);
+	void TryJump(const FInputActionValue& Value);
+	void TryPush(const FInputActionValue& Value);
 };

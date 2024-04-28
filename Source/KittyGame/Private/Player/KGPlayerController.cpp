@@ -7,7 +7,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "Interfaces/KGPlayerControls.h"
 
-AKGPlayerController::AKGPlayerController(): MoveAction(nullptr), LookAction(nullptr), JumpAction(nullptr)
+AKGPlayerController::AKGPlayerController(): MoveAction(nullptr), LookAction(nullptr), JumpAction(nullptr),
+                                            PushAction(nullptr)
 {
 	PlayerCameraManagerClass = AKGPlayerCameraManager::StaticClass();
 }
@@ -19,7 +20,7 @@ void AKGPlayerController::BeginPlay()
 	if (const ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{
 		// Setup control mappings
-		if (UEnhancedInputLocalPlayerSubsystem* InputSubsystem = GetLocalPlayer()->GetSubsystem<
+		if (UEnhancedInputLocalPlayerSubsystem* InputSubsystem = LocalPlayer->GetSubsystem<
 			UEnhancedInputLocalPlayerSubsystem>(); InputSubsystem && PlayerMappings.Num() > 0)
 		{
 			InputSubsystem->ClearAllMappings();
@@ -27,6 +28,10 @@ void AKGPlayerController::BeginPlay()
 			{
 				InputSubsystem->AddMappingContext(PlayerMapping, 0);
 			}
+		}
+		else
+		{
+			UE_LOG(LogPlayerController, Warning, TEXT("Can't bind controls! Check PlayerMappings Set."));
 		}
 	}
 }
@@ -37,33 +42,38 @@ void AKGPlayerController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		if (const auto MoveFunc = FEnhancedInputActionHandlerSignature::TMethodPtr<
-			AKGPlayerController>(&ThisClass::Move)) EnhancedInputComponent->BindAction(
-			MoveAction, ETriggerEvent::Triggered, this, MoveFunc);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::TryMove);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::TryLook);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ThisClass::TryJump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ThisClass::TryPush);
+	}
+	else
+	{
+		UE_LOG(LogPlayerController, Warning, TEXT("Input component not enhanced. Controls will not working."));
 	}
 }
 
-void AKGPlayerController::Move(const FInputActionValue& Value) const
+void AKGPlayerController::TryMove(const FInputActionValue& Value)
 {
 	APawn* ControlledPawn = GetPawn();
 	if (!ControlledPawn) return;
 
 	if (!ControlledPawn->Implements<UKGPlayerControls>()) return;
 
-	IKGPlayerControls::Execute_Move(ControlledPawn, Value.Get<FVector2D>());
+	IKGPlayerControls::Execute_TryMove(ControlledPawn, Value.Get<FVector2D>());
 }
 
-void AKGPlayerController::Look(const FInputActionValue& Value) const
+void AKGPlayerController::TryLook(const FInputActionValue& Value)
 {
 	APawn* ControlledPawn = GetPawn();
 	if (!ControlledPawn) return;
 
 	if (!ControlledPawn->Implements<UKGPlayerControls>()) return;
 
-	IKGPlayerControls::Execute_LookAround(ControlledPawn, Value.Get<FVector2D>());
+	IKGPlayerControls::Execute_TryLook(ControlledPawn, Value.Get<FVector2D>());
 }
 
-void AKGPlayerController::DoJump(const FInputActionValue& Value) const
+void AKGPlayerController::TryJump(const FInputActionValue& Value)
 {
 	APawn* ControlledPawn = GetPawn();
 	if (!ControlledPawn) return;
@@ -72,5 +82,17 @@ void AKGPlayerController::DoJump(const FInputActionValue& Value) const
 
 	if (!Value.Get<bool>()) return;
 
-	IKGPlayerControls::Execute_DoJump(ControlledPawn);
+	IKGPlayerControls::Execute_TryJump(ControlledPawn);
+}
+
+void AKGPlayerController::TryPush(const FInputActionValue& Value)
+{
+	APawn* ControlledPawn = GetPawn();
+	if (!ControlledPawn) return;
+
+	if (!ControlledPawn->Implements<UKGPlayerControls>()) return;
+
+	if (!Value.Get<bool>()) return;
+
+	IKGPlayerControls::Execute_TryPush(ControlledPawn);
 }

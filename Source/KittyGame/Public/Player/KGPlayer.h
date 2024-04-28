@@ -14,7 +14,10 @@ class KITTYGAME_API AKGPlayer : public ACharacter, public IKGPlayerControls
 
 public:
 	AKGPlayer();
-	virtual void Move_Implementation(const FVector2D Value) override;
+	virtual void TryMove_Implementation(const FVector2D Value) override;
+	virtual void TryLook_Implementation(const FVector2D Value) override;
+	virtual void TryJump_Implementation() override;
+	virtual void TryPush_Implementation() override;
 
 protected:
 	virtual void BeginPlay() override;

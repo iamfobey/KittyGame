@@ -23,11 +23,14 @@ class KITTYGAME_API IKGPlayerControls
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(Blueprintable, BlueprintNativeEvent, Category="Player Controls")
-	void Move(const FVector2D Value);
+	void TryMove(const FVector2D Value);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
-	void LookAround(const FVector2D Value);
+	void TryLook(const FVector2D Value);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
-	void DoJump();
+	void TryJump();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
+	void TryPush();
 };
