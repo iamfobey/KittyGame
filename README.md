@@ -58,7 +58,7 @@ Or these steps:
 1. Navigate to the directory where you cloned the repository.
 2. Double-click on `KittyGame.uproject`.
 
-![Open](https://github.com/MMadmer/KittyGame/assets/51472243/4a130763-b0e7-4b36-ace3-f6792997069a)
+![Open](https://github.com/MMadmer/KittyGame/assets/51472243/1ed7273c-b8c6-430d-9f98-29e0c782beb4)
 
 ## License
 
