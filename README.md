@@ -8,7 +8,7 @@ This repository contains a C++ project based on the Unreal Engine. Follow the st
 
 Before getting started, ensure you have the following installed on your system:
 
-- Unreal Engine (4.27.2)
+- Unreal Engine (5.3)
 - Visual Studio (2019+)
 
 ### Cloning the Repository
