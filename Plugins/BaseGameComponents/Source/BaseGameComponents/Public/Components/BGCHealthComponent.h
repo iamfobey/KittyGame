@@ -48,7 +48,7 @@ public:
 
 	/** Check on death.*/
 	UFUNCTION(BlueprintCallable, Category = "Health")
-	bool IsDead() const { return FMath::IsNearlyZero(Health); }
+	FORCEINLINE bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
 	/** Get current health.*/
 	UFUNCTION(BlueprintPure)
