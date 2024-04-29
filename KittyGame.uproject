@@ -170,6 +170,10 @@
 			"SupportedTargetPlatforms": [
 				"Mac"
 			]
+		},
+		{
+			"Name": "WorldPartitionHLODUtilities",
+			"Enabled": false
 		}
 	]
 }
