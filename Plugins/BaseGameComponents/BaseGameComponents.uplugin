@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "BaseGameComponents",
+	"Description": "This plugin contains components that usially using in games.",
+	"Category": "Other",
+	"CreatedBy": "Madmer",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "BaseGameComponents",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
