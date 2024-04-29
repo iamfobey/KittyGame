@@ -32,5 +32,8 @@ public:
 	void TryJump();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
+	void TryRun(const bool Value);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
 	void TryPush();
 };

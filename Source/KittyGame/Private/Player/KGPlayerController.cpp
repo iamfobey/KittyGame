@@ -45,7 +45,8 @@ void AKGPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ThisClass::TryMove);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::TryLook);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ThisClass::TryJump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ThisClass::TryPush);
+		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &ThisClass::TryRun);
+		EnhancedInputComponent->BindAction(PushAction, ETriggerEvent::Triggered, this, &ThisClass::TryPush);
 	}
 	else
 	{
@@ -83,6 +84,16 @@ void AKGPlayerController::TryJump(const FInputActionValue& Value)
 	if (!Value.Get<bool>()) return;
 
 	IKGPlayerControls::Execute_TryJump(ControlledPawn);
+}
+
+void AKGPlayerController::TryRun(const FInputActionValue& Value)
+{
+	APawn* ControlledPawn = GetPawn();
+	if (!ControlledPawn) return;
+
+	if (!ControlledPawn->Implements<UKGPlayerControls>()) return;
+
+	IKGPlayerControls::Execute_TryRun(ControlledPawn, Value.Get<bool>());
 }
 
 void AKGPlayerController::TryPush(const FInputActionValue& Value)

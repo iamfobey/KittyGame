@@ -2,14 +2,18 @@
 
 #include "Player/KGPlayer.h"
 
+#include "Components/KGCharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-AKGPlayer::AKGPlayer()
+AKGPlayer::AKGPlayer(const FObjectInitializer& ObjInit) : Super(
+	ObjInit.SetDefaultSubobjectClass<UKGCharacterMovementComponent>(CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	bUseControllerRotationYaw = true;
+
+	bWantsToRun = false;
 }
 
 void AKGPlayer::BeginPlay()
@@ -38,6 +42,13 @@ void AKGPlayer::TryJump_Implementation()
 	IKGPlayerControls::TryJump_Implementation();
 
 	Jump();
+}
+
+void AKGPlayer::TryRun_Implementation(const bool Value)
+{
+	IKGPlayerControls::TryRun_Implementation(Value);
+
+	bWantsToRun = Value;
 }
 
 void AKGPlayer::TryPush_Implementation()

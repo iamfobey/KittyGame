@@ -37,6 +37,9 @@ protected:
 	UInputAction* JumpAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Supported Actions")
+	UInputAction* RunAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input|Supported Actions")
 	UInputAction* PushAction;
 	// ------------------------------------------------------------
 
@@ -46,5 +49,6 @@ protected:
 	void TryMove(const FInputActionValue& Value);
 	void TryLook(const FInputActionValue& Value);
 	void TryJump(const FInputActionValue& Value);
+	void TryRun(const FInputActionValue& Value);
 	void TryPush(const FInputActionValue& Value);
 };
