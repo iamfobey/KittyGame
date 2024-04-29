@@ -40,7 +40,7 @@ protected:
 	UInputAction* RunAction;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Supported Actions")
-	UInputAction* PushAction;
+	UInputAction* InteractAction;
 	// ------------------------------------------------------------
 
 	virtual void BeginPlay() override;
@@ -50,5 +50,5 @@ protected:
 	void TryLook(const FInputActionValue& Value);
 	void TryJump(const FInputActionValue& Value);
 	void TryRun(const FInputActionValue& Value);
-	void TryPush(const FInputActionValue& Value);
+	void TryInteract(const FInputActionValue& Value);
 };

@@ -11,10 +11,11 @@ public class KittyGame : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core",
-			"CoreUObject", 
-			"Engine", 
+			"CoreUObject",
+			"Engine",
 			"InputCore",
-			"EnhancedInput"
+			"EnhancedInput",
+			"BaseGameComponents"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

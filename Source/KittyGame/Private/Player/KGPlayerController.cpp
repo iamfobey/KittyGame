@@ -8,7 +8,7 @@
 #include "Interfaces/KGPlayerControls.h"
 
 AKGPlayerController::AKGPlayerController(): MoveAction(nullptr), LookAction(nullptr), JumpAction(nullptr),
-                                            PushAction(nullptr)
+                                            InteractAction(nullptr)
 {
 	PlayerCameraManagerClass = AKGPlayerCameraManager::StaticClass();
 }
@@ -46,7 +46,7 @@ void AKGPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ThisClass::TryLook);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ThisClass::TryJump);
 		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &ThisClass::TryRun);
-		EnhancedInputComponent->BindAction(PushAction, ETriggerEvent::Triggered, this, &ThisClass::TryPush);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ThisClass::TryInteract);
 	}
 	else
 	{
@@ -96,7 +96,7 @@ void AKGPlayerController::TryRun(const FInputActionValue& Value)
 	IKGPlayerControls::Execute_TryRun(ControlledPawn, Value.Get<bool>());
 }
 
-void AKGPlayerController::TryPush(const FInputActionValue& Value)
+void AKGPlayerController::TryInteract(const FInputActionValue& Value)
 {
 	APawn* ControlledPawn = GetPawn();
 	if (!ControlledPawn) return;
@@ -105,5 +105,5 @@ void AKGPlayerController::TryPush(const FInputActionValue& Value)
 
 	if (!Value.Get<bool>()) return;
 
-	IKGPlayerControls::Execute_TryPush(ControlledPawn);
+	IKGPlayerControls::Execute_TryInteract(ControlledPawn);
 }
