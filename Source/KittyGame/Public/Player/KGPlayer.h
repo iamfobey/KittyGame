@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/GameFramework/Character.h"
 #include "KGPlayer.generated.h"
 
+class UBGCStaminaComponent;
 class UBGCHealthComponent;
 
 UCLASS()
@@ -40,9 +41,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UBGCHealthComponent* HealthComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UBGCStaminaComponent* StaminaComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float InteractionTraceDistance = 150.0f;
-	
+
 	uint8 bWantsToRun : 1;
 	FTraceDelegate InteractionTraceDelegate;
 

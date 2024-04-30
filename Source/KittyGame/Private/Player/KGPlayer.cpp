@@ -3,6 +3,7 @@
 #include "Player/KGPlayer.h"
 
 #include "Components/BGCHealthComponent.h"
+#include "Components/BGCStaminaComponent.h"
 #include "Components/KGCharacterMovementComponent.h"
 #include "Interfaces/KGInteraction.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -18,6 +19,7 @@ AKGPlayer::AKGPlayer(const FObjectInitializer& ObjInit) : Super(
 	bWantsToRun = false;
 
 	HealthComponent = CreateDefaultSubobject<UBGCHealthComponent>("HealthComponent");
+	StaminaComponent = CreateDefaultSubobject<UBGCStaminaComponent>("StaminaComponent");
 }
 
 void AKGPlayer::BeginPlay()
