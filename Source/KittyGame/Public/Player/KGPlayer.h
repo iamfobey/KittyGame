@@ -39,8 +39,14 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UBGCHealthComponent* HealthComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float InteractionTraceDistance = 150.0f;
 	
 	uint8 bWantsToRun : 1;
+	FTraceDelegate InteractionTraceDelegate;
 
 	virtual void BeginPlay() override;
+
+	void OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum);
 };

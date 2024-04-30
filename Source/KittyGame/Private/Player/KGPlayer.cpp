@@ -4,6 +4,7 @@
 
 #include "Components/BGCHealthComponent.h"
 #include "Components/KGCharacterMovementComponent.h"
+#include "Interfaces/KGInteraction.h"
 #include "Kismet/KismetMathLibrary.h"
 
 AKGPlayer::AKGPlayer(const FObjectInitializer& ObjInit) : Super(
@@ -22,6 +23,8 @@ AKGPlayer::AKGPlayer(const FObjectInitializer& ObjInit) : Super(
 void AKGPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InteractionTraceDelegate.BindUObject(this, &ThisClass::OnInteractionTraceDone);
 }
 
 void AKGPlayer::TryMove_Implementation(const FVector2D Value)
@@ -57,4 +60,34 @@ void AKGPlayer::TryRun_Implementation(const bool Value)
 void AKGPlayer::TryInteract_Implementation(const bool Value)
 {
 	IKGPlayerControls::TryInteract_Implementation(Value);
+
+	if (!Controller) return;
+
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	FVector TraceStart{};
+	FRotator ViewRotation{};
+
+	Controller->GetPlayerViewPoint(TraceStart, ViewRotation);
+
+	const FVector TraceEnd = TraceStart + ViewRotation.Vector() * InteractionTraceDistance;
+	FCollisionQueryParams CollisionParams{};
+	CollisionParams.AddIgnoredActor(this);
+	FCollisionResponseParams ResponseParams{};
+
+	UE_LOG(LogTemp, Display, TEXT("Interaction called"));
+	World->AsyncLineTraceByChannel(EAsyncTraceType::Single, TraceStart, TraceEnd, ECC_Visibility, CollisionParams,
+	                               ResponseParams, &InteractionTraceDelegate);
+}
+
+void AKGPlayer::OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum)
+{
+	UE_LOG(LogTemp, Display, TEXT("Async LineTrace done"));
+	if (TraceDatum.OutHits.Num() <= 0) return;
+
+	AActor* ActorHit = TraceDatum.OutHits[0].GetActor();
+	if (!ActorHit) return;
+
+	if (ActorHit->Implements<UKGInteraction>()) IKGInteraction::Execute_Interact(ActorHit, this);
 }
