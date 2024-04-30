@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/GameFramework/Character.h"
 #include "KGPlayer.generated.h"
 
+class UCameraComponent;
 class UBGCStaminaComponent;
 class UBGCHealthComponent;
 
@@ -39,6 +40,15 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* Head;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USkeletalMeshComponent* Paw;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UBGCHealthComponent* HealthComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -50,7 +60,10 @@ protected:
 	uint8 bWantsToRun : 1;
 	FTraceDelegate InteractionTraceDelegate;
 
-	virtual void BeginPlay() override;
-
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void DoInteract();
+	
 	void OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum);
+	
+	virtual void BeginPlay() override;
 };

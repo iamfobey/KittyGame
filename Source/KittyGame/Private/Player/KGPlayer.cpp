@@ -2,6 +2,7 @@
 
 #include "Player/KGPlayer.h"
 
+#include "Camera/CameraComponent.h"
 #include "Components/BGCHealthComponent.h"
 #include "Components/BGCStaminaComponent.h"
 #include "Components/KGCharacterMovementComponent.h"
@@ -17,6 +18,16 @@ AKGPlayer::AKGPlayer(const FObjectInitializer& ObjInit) : Super(
 	bUseControllerRotationYaw = true;
 
 	bWantsToRun = false;
+
+	Camera = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+	Camera->SetupAttachment(RootComponent);
+	Camera->bUsePawnControlRotation = true;
+
+	Head = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
+	Head->SetupAttachment(Camera);
+
+	Paw = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMesh");
+	Paw->SetupAttachment(RootComponent);
 
 	HealthComponent = CreateDefaultSubobject<UBGCHealthComponent>("HealthComponent");
 	StaminaComponent = CreateDefaultSubobject<UBGCStaminaComponent>("StaminaComponent");
@@ -78,18 +89,22 @@ void AKGPlayer::TryInteract_Implementation(const bool Value)
 	CollisionParams.AddIgnoredActor(this);
 	FCollisionResponseParams ResponseParams{};
 
-	UE_LOG(LogTemp, Display, TEXT("Interaction called"));
 	World->AsyncLineTraceByChannel(EAsyncTraceType::Single, TraceStart, TraceEnd, ECC_Visibility, CollisionParams,
 	                               ResponseParams, &InteractionTraceDelegate);
 }
 
 void AKGPlayer::OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum)
 {
-	UE_LOG(LogTemp, Display, TEXT("Async LineTrace done"));
 	if (TraceDatum.OutHits.Num() <= 0) return;
 
 	AActor* ActorHit = TraceDatum.OutHits[0].GetActor();
 	if (!ActorHit) return;
 
-	if (ActorHit->Implements<UKGInteraction>()) IKGInteraction::Execute_Interact(ActorHit, this);
+	if (ActorHit->Implements<UKGInteraction>())
+	{
+		IKGInteraction::Execute_Interact(ActorHit, this);
+
+		// Blueprint implementation
+		DoInteract();
+	}
 }
