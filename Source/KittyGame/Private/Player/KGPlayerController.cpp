@@ -103,7 +103,5 @@ void AKGPlayerController::TryInteract(const FInputActionValue& Value)
 
 	if (!ControlledPawn->Implements<UKGPlayerControls>()) return;
 
-	if (!Value.Get<bool>()) return;
-
-	IKGPlayerControls::Execute_TryInteract(ControlledPawn);
+	IKGPlayerControls::Execute_TryInteract(ControlledPawn, Value.Get<bool>());
 }

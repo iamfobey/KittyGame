@@ -35,5 +35,5 @@ public:
 	void TryRun(const bool Value);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
-	void TryInteract();
+	void TryInteract(const bool Value);
 };

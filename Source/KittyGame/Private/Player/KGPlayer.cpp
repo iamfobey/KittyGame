@@ -54,7 +54,7 @@ void AKGPlayer::TryRun_Implementation(const bool Value)
 	bWantsToRun = Value;
 }
 
-void AKGPlayer::TryInteract_Implementation()
+void AKGPlayer::TryInteract_Implementation(const bool Value)
 {
-	IKGPlayerControls::TryInteract_Implementation();
+	IKGPlayerControls::TryInteract_Implementation(Value);
 }

@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Interaction.generated.h"
+#include "KGInteraction.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UInteraction : public UInterface
+class UKGInteraction : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,7 +16,7 @@ class UInteraction : public UInterface
 /**
  * 
  */
-class KITTYGAME_API IInteraction
+class KITTYGAME_API IKGInteraction
 {
 	GENERATED_BODY()
 

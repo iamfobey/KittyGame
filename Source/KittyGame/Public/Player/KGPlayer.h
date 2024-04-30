@@ -34,7 +34,7 @@ public:
 	virtual void TryLook_Implementation(const FVector2D Value) override;
 	virtual void TryJump_Implementation() override;
 	virtual void TryRun_Implementation(const bool Value) override;
-	virtual void TryInteract_Implementation() override;
+	virtual void TryInteract_Implementation(const bool Value) override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
