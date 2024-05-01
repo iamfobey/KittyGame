@@ -3,6 +3,7 @@
 #include "Player/KGPlayer.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/BGCClimbingComponent.h"
 #include "Components/BGCHealthComponent.h"
 #include "Components/BGCStaminaComponent.h"
 #include "Components/KGCharacterMovementComponent.h"
@@ -18,6 +19,7 @@ AKGPlayer::AKGPlayer(const FObjectInitializer& ObjInit) : Super(
 	bUseControllerRotationYaw = true;
 
 	bWantsToRun = false;
+	bIsMovingForward = false;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
 	Camera->SetupAttachment(RootComponent);
@@ -28,6 +30,9 @@ AKGPlayer::AKGPlayer(const FObjectInitializer& ObjInit) : Super(
 
 	Paw = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMesh");
 	Paw->SetupAttachment(RootComponent);
+
+	ClimbingComponent = CreateDefaultSubobject<UBGCClimbingComponent>("ClimbingComponent");
+	ClimbingComponent->SetupAttachment(RootComponent);
 
 	HealthComponent = CreateDefaultSubobject<UBGCHealthComponent>("HealthComponent");
 	StaminaComponent = CreateDefaultSubobject<UBGCStaminaComponent>("StaminaComponent");
@@ -44,8 +49,16 @@ void AKGPlayer::TryMove_Implementation(const FVector2D Value)
 {
 	IKGPlayerControls::TryMove_Implementation(Value);
 
-	AddMovementInput(
-		UKismetMathLibrary::Quat_RotateVector(UE::Math::TQuat(GetActorRotation()), FVector(Value.Y, Value.X, 0.0f)));
+	const FVector Origin = ClimbingComponent && ClimbingComponent->IsClimbing()
+		                       ? FVector(0.0f, Value.X, Value.Y)
+		                       : FVector(Value.Y, Value.X, 0.0f);
+
+	const FVector Movement = UKismetMathLibrary::Quat_RotateVector(UE::Math::TQuat(GetActorRotation()), Origin);
+
+	if (Value.Y > 0) bIsMovingForward = true;
+	else bIsMovingForward = false;
+
+	AddMovementInput(Movement);
 }
 
 void AKGPlayer::TryLook_Implementation(const FVector2D Value)
@@ -87,10 +100,16 @@ void AKGPlayer::TryInteract_Implementation(const bool Value)
 	const FVector TraceEnd = TraceStart + ViewRotation.Vector() * InteractionTraceDistance;
 	FCollisionQueryParams CollisionParams{};
 	CollisionParams.AddIgnoredActor(this);
-	FCollisionResponseParams ResponseParams{};
 
 	World->AsyncLineTraceByChannel(EAsyncTraceType::Single, TraceStart, TraceEnd, ECC_Visibility, CollisionParams,
-	                               ResponseParams, &InteractionTraceDelegate);
+	                               FCollisionResponseParams(), &InteractionTraceDelegate);
+}
+
+void AKGPlayer::TryClimb_Implementation(const bool Value)
+{
+	IKGPlayerControls::TryClimb_Implementation(Value);
+
+	if (ClimbingComponent) ClimbingComponent->SetWantsToClimb(Value);
 }
 
 void AKGPlayer::OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum)
@@ -105,6 +124,6 @@ void AKGPlayer::OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDa
 		IKGInteraction::Execute_Interact(ActorHit, this);
 
 		// Blueprint implementation
-		DoInteract();
+		OnInteract();
 	}
 }

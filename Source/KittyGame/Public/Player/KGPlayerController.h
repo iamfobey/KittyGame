@@ -41,6 +41,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input|Supported Actions")
 	UInputAction* InteractAction;
+
+	UPROPERTY(EditDefaultsOnly, Category="Input|Supported Actions")
+	UInputAction* ClimbAction;
 	// ------------------------------------------------------------
 
 	virtual void BeginPlay() override;
@@ -51,4 +54,5 @@ protected:
 	void TryJump(const FInputActionValue& Value);
 	void TryRun(const FInputActionValue& Value);
 	void TryInteract(const FInputActionValue& Value);
+	void TryClimb(const FInputActionValue& Value);
 };

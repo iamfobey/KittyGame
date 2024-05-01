@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/GameFramework/Character.h"
 #include "KGPlayer.generated.h"
 
+class UBGCClimbingComponent;
 class UCameraComponent;
 class UBGCStaminaComponent;
 class UBGCHealthComponent;
@@ -29,7 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	FORCEINLINE bool IsRunning() const
 	{
-		return bWantsToRun && !GetVelocity().IsZero();
+		return bWantsToRun && bIsMovingForward && !GetVelocity().IsZero();
 	}
 
 	virtual void TryMove_Implementation(const FVector2D Value) override;
@@ -37,6 +38,7 @@ public:
 	virtual void TryJump_Implementation() override;
 	virtual void TryRun_Implementation(const bool Value) override;
 	virtual void TryInteract_Implementation(const bool Value) override;
+	virtual void TryClimb_Implementation(const bool Value) override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -49,21 +51,25 @@ protected:
 	UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UBGCClimbingComponent* ClimbingComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UBGCHealthComponent* HealthComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UBGCStaminaComponent* StaminaComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float InteractionTraceDistance = 150.0f;
+	float InteractionTraceDistance = 75.0f;
 
 	uint8 bWantsToRun : 1;
+	uint8 bIsMovingForward : 1;
 	FTraceDelegate InteractionTraceDelegate;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-	void DoInteract();
-	
+	void OnInteract();
+
 	void OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum);
-	
+
 	virtual void BeginPlay() override;
 };

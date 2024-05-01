@@ -36,4 +36,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
 	void TryInteract(const bool Value);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Player Controls")
+	void TryClimb(const bool Value);
 };

@@ -8,7 +8,7 @@
 #include "Interfaces/KGPlayerControls.h"
 
 AKGPlayerController::AKGPlayerController(): MoveAction(nullptr), LookAction(nullptr), JumpAction(nullptr),
-                                            InteractAction(nullptr)
+                                            RunAction(nullptr), InteractAction(nullptr), ClimbAction(nullptr)
 {
 	PlayerCameraManagerClass = AKGPlayerCameraManager::StaticClass();
 }
@@ -47,6 +47,7 @@ void AKGPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ThisClass::TryJump);
 		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &ThisClass::TryRun);
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &ThisClass::TryInteract);
+		EnhancedInputComponent->BindAction(ClimbAction, ETriggerEvent::Triggered, this, &ThisClass::TryClimb);
 	}
 	else
 	{
@@ -104,4 +105,14 @@ void AKGPlayerController::TryInteract(const FInputActionValue& Value)
 	if (!ControlledPawn->Implements<UKGPlayerControls>()) return;
 
 	IKGPlayerControls::Execute_TryInteract(ControlledPawn, Value.Get<bool>());
+}
+
+void AKGPlayerController::TryClimb(const FInputActionValue& Value)
+{
+	APawn* ControlledPawn = GetPawn();
+	if (!ControlledPawn) return;
+
+	if (!ControlledPawn->Implements<UKGPlayerControls>()) return;
+
+	IKGPlayerControls::Execute_TryClimb(ControlledPawn, Value.Get<bool>());
 }

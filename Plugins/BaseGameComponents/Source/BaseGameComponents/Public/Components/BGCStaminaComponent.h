@@ -66,6 +66,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stamina")
 	void SetStamina(const float NewStamina);
 
+	/** Try to set new stamina with normalized value.*/
+	UFUNCTION(BlueprintCallable, Category = "Stamina")
+	FORCEINLINE void SetStaminaNorm(const float NewStaminaNorm)
+	{
+		SetStamina(FMath::GetMappedRangeValueClamped(FVector2D(0.0f, 1.0f), FVector2D(0.0f, MaxStamina),
+		                                             FMath::Clamp(NewStaminaNorm, 0.0f, 1.0f)));
+	}
+
 	/** Check if stamina full.*/
 	UFUNCTION(BlueprintCallable, Category = "Stamina")
 	FORCEINLINE float IsStaminaFull() const { return FMath::IsNearlyEqual(Stamina, MaxStamina); }
