@@ -66,7 +66,7 @@ protected:
 	uint8 bIsMovingForward : 1;
 	FTraceDelegate InteractionTraceDelegate;
 
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnInteract();
 
 	void OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum);

@@ -112,6 +112,10 @@ void AKGPlayer::TryClimb_Implementation(const bool Value)
 	if (ClimbingComponent) ClimbingComponent->SetWantsToClimb(Value);
 }
 
+void AKGPlayer::OnInteract_Implementation()
+{
+}
+
 void AKGPlayer::OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDatum& TraceDatum)
 {
 	if (TraceDatum.OutHits.Num() <= 0) return;
@@ -121,9 +125,6 @@ void AKGPlayer::OnInteractionTraceDone(const FTraceHandle& TraceHandle, FTraceDa
 
 	if (ActorHit->Implements<UKGInteraction>())
 	{
-		IKGInteraction::Execute_Interact(ActorHit, this);
-
-		// Blueprint implementation
-		OnInteract();
+		if (IKGInteraction::Execute_Interact(ActorHit, this)) OnInteract();
 	}
 }
